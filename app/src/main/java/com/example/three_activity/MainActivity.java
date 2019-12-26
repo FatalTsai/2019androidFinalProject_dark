@@ -2,7 +2,10 @@ package com.example.three_activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +20,17 @@ public class MainActivity extends AppCompatActivity {
 
     int page,no;
     String name;
-    int classname,prize;
+    int classname,price;
     EditText name_edit,price_edit;
     Button Totwo;
     TextView text1;
     Spinner spinner;
+    final String[] lunch = {"undefined", "控肉飯", "雞排飯", "炸醬麵", "水餃"};
+
+    static final String db_name ="testDB";
+    static  final  String tb_name="test";
+    SQLiteDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +45,27 @@ public class MainActivity extends AppCompatActivity {
         no = it.getIntExtra("page",0);
         text1.setText(no+"→ "+page);
 
+        db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
+
+        String CreateTable = "CREATE TABLE IF NOT EXISTS "+
+                tb_name+
+                "( name VARCHAR(32)," +
+                "price int(32),"+
+                "classname int(64) )";
+        db.execSQL(CreateTable);
 
         spinner = (Spinner)findViewById(R.id.spinner);
-        final String[] lunch = {"魯肉飯", "控肉飯", "雞排飯", "炸醬麵", "水餃"};
         ArrayAdapter<String> lunchList = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_dropdown_item,
                 lunch);
         spinner.setAdapter(lunchList);
 
-
+        //spinner listener
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("spinner_item",lunch[position]);
+                classname = position;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
@@ -56,9 +73,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submit(View view){
-        name = name_edit.getText();
 
+        name = name_edit.getText().toString();
+        price = Integer.valueOf(price_edit.getText().toString() );
+        text1.setText(name);
+        Log.i("name", name);
+        Log.i("price", price+"");
+        Log.i("classname", lunch[classname]);
+
+        addData(name,price,classname);
     }
+
+    private  void  addData(String name ,int price,int  classname)
+    {
+        ContentValues cv =  new ContentValues(3);
+
+        cv.put("name",name);
+        cv.put("price",price);
+        cv.put("classname",classname);
+
+        Log.d("name",name);
+
+        db.insert(tb_name,null,cv);
+    }
+
+
+
     public void totwo(View view) {
 
         Intent it = new Intent(this,Main2Activity.class);
