@@ -61,11 +61,11 @@ public class Main2Activity extends AppCompatActivity {
 
             do {
                 str ="";
-                str += "id:" + c.getString(0) + "\n";
+                str += "id:" + c.getString(0) + ".0\n";
                 str += "name:" + c.getString(1) + "\n";
                 str += "price:" + c.getString(2) + "\n";
                 str += "class:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
-                mData.add(" "+str);
+                mData.add(str);
             } while (c.moveToNext());
 
         }
@@ -140,7 +140,7 @@ public class Main2Activity extends AppCompatActivity {
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-        private List<String> mData;
+        public List<String> mData;
 
         MyAdapter(List<String> data) {
             mData = data;
@@ -173,7 +173,7 @@ public class Main2Activity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         // 移除項目，getAdapterPosition為點擊的項目位置
-                        removeItem(getAdapterPosition());
+                        removeItem(getAdapterPosition(),mData);
                     }
                 });
 
@@ -213,8 +213,16 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         // 刪除項目
-        public void removeItem(int position){
-            db.delete(tb_name ,"id  = "+ (position+1), null);
+        public void removeItem(int position,List MData){
+            //System.out.println(str.substring(str.indexOf(">") 1, str.lastIndexOf("<")));
+            Log.d("postion :",MData.get(position)+"");
+            String getid = MData.get(position)+"";
+            getid = getid.substring(getid.indexOf(":")+1 , getid.lastIndexOf("."));
+            Log.d("substring",getid );
+            Log.d("substring",2+"");
+            int id =Integer.valueOf(getid);
+            Log.d("int id",id+"" );
+            db.delete(tb_name ,"_ID  = "+ (id), null);
             mData.remove(position);
             notifyItemRemoved(position);
         }
