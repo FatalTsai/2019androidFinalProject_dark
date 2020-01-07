@@ -49,15 +49,24 @@ public class Main2Activity extends AppCompatActivity {
         text2.setText(no+"→ "+page);
 
 
-
+        final String[] lunch = {"undefined", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
         db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
         loadtext();
 
 
 
-        // 準備資料，塞50個項目到ArrayList裡
-        for(int i = 0; i < 50; i++) {
-            mData.add("項目"+i);
+        // 準備資料，塞到ArrayList裡
+        Cursor c=db.rawQuery("SELECT * FROM "+tb_name,null);
+        if(c.moveToFirst()) {
+
+            do {
+                str ="";
+                str += "id:" + c.getString(0) + "\n";
+                str += "name:" + c.getString(1) + "\n";
+                str += "price:" + c.getString(2) + "\n";
+                str += "class:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
+                mData.add(" "+str);
+            } while (c.moveToNext());
 
         }
 
@@ -66,7 +75,7 @@ public class Main2Activity extends AppCompatActivity {
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         // 設置RecyclerView為列表型態
         //recycler_view.setLayoutManager(new LinearLayoutManager(this));
-        recycler_view.setLayoutManager(new GridLayoutManager(this, 4));
+        recycler_view.setLayoutManager(new GridLayoutManager(   this, 1));
 
         // 設置格線
         //recycler_view.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -112,10 +121,15 @@ public class Main2Activity extends AppCompatActivity {
             str += "-------------\n";
 
             do {
-                str += "id:" + c.getString(0) + "\n";
-                str += "name:" + c.getString(1) + "\n";
-                str += "price:" + c.getString(2) + "\n";
+                str += "name:" + c.getString(0) + "\n";
+                str += "price:" + c.getString(1) + "\n";
+                str += "class:" + c.getString(2) + "\n";
             } while (c.moveToNext());
+
+            Cursor c2=db.rawQuery("SELECT COUNT(*) FROM "+tb_name+" WHERE classname = 2",null);
+            if(c2.moveToFirst()) {
+                str = c2.getString(0);
+            }
 
             TextView txv = (TextView) findViewById(R.id.txv);
             txv.setText(str);
@@ -200,6 +214,7 @@ public class Main2Activity extends AppCompatActivity {
 
         // 刪除項目
         public void removeItem(int position){
+            db.delete(tb_name ,"id  = "+ (position+1), null);
             mData.remove(position);
             notifyItemRemoved(position);
         }

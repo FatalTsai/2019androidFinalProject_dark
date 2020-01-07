@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     Button Totwo;
     TextView text1;
     Spinner spinner;
-    final String[] lunch = {"undefined", "控肉飯", "雞排飯", "炸醬麵", "水餃"};
+    final String[] lunch = {"undefined", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
 
     static final String db_name ="testDB";
     static  final  String tb_name="test";
@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         String CreateTable = "CREATE TABLE IF NOT EXISTS "+
                 tb_name+
-                "( name VARCHAR(32)," +
+                "(_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                "name VARCHAR(32)," +
                 "price int(32),"+
                 "classname int(64) )";
         db.execSQL(CreateTable);
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     private  void  addData(String name ,int price,int  classname)
     {
         ContentValues cv =  new ContentValues(3);
-
         cv.put("name",name);
         cv.put("price",price);
         cv.put("classname",classname);
