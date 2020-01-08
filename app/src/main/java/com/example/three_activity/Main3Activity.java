@@ -83,8 +83,8 @@ public class Main3Activity extends AppCompatActivity {
     }
 
     public void threetotwo(View view) {
-        Intent it = new Intent(this,MainActivity.class);
-        it.putExtra("page",2);
+        Intent it = new Intent(this,Main2Activity.class);
+        it.putExtra("page",3);
         startActivityForResult(it,page);
     }
 
