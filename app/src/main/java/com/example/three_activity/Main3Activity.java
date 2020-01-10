@@ -1,6 +1,7 @@
 package com.example.three_activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +9,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
@@ -29,21 +33,26 @@ public class Main3Activity extends AppCompatActivity {
     static  final  String tb_name="test";
 
 
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
+    ConstraintLayout currentLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
-        text3 = findViewById(R.id.text3);
         page =3;
         no =0;
         Intent it=getIntent();
         no = it.getIntExtra("page",0);
 
-        text3.setText(no+"→ "+page);
+        currentLayout = findViewById(R.id.back);
+        currentLayout.setBackgroundColor(Color.rgb(0,0,0));
+
         db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
 
-        final String[] lunch = {"undefined", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
+        final String[] lunch = {"尚未選擇", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
         final Integer[] classnumer= new Integer[100];
         final int[] pieColor ={Color.GRAY,Color.BLUE,Color.GREEN,Color.RED,Color.YELLOW};
 
@@ -69,7 +78,7 @@ public class Main3Activity extends AppCompatActivity {
         chartData.setHasLabels(true).setValueLabelTextSize(14);
         chartData.setValueLabelBackgroundColor(Color.argb(255,0,0,0));
         chartData.setHasCenterCircle(true).setCenterText1("Cost Type")
-                .setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#0097A7"));
+                .setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#f4e1d9"));
         pieChart.setPieChartData(chartData);
 
     }
@@ -88,6 +97,56 @@ public class Main3Activity extends AppCompatActivity {
         startActivityForResult(it,page);
     }
 
+    public boolean onTouchEvent(MotionEvent event)
+    //ref from:https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android?fbclid=IwAR2lQ5dvUe3XrpaEcyyJW9HmNfhcagynlLTsB-1OGf1t17aVr3XNIrgdSzU
+    {
+        switch(event.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE)
+                {
+                    if (x2 > x1)
+                    {
+                        //txv.setText("右移");
+                        Random x = new Random();
+                        int red = x.nextInt(256);
+                        int green = x.nextInt(256);
+                        int blue = x.nextInt(256);
+
+                        Log.i("right","right");
+                        Intent it = new Intent(this,MainActivity.class);
+                        it.putExtra("page",1);
+                        startActivityForResult(it,page);
+                    }
+
+                    else
+                    {
+                        //txv.setText("左移");
+                        Random x = new Random();
+                        int red = x.nextInt(256);
+                        int green = x.nextInt(256);
+                        int blue = x.nextInt(256);
+                        Log.i("left","left");
+
+                        Intent it = new Intent(this,Main2Activity.class);
+                        it.putExtra("page",1);
+                        startActivityForResult(it,page);
+                    }
+
+                }
+                else
+                {
+                    // consider as something else - a screen tap for example
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
 
 
 

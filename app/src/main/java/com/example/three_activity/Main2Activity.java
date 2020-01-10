@@ -1,6 +1,7 @@
 package com.example.three_activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,10 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -36,20 +40,23 @@ public class Main2Activity extends AppCompatActivity {
     private MyAdapter adapter;
     private Button btnremove;
     private ArrayList<String> mData = new ArrayList<>();
+    ConstraintLayout currentLayout;
 
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        text2 = findViewById(R.id.text2);
         no =0;
         page =2;
         Intent it=getIntent();
         no = it.getIntExtra("page",0);
-        text2.setText(no+"→ "+page);
 
+        currentLayout = findViewById(R.id.back);
+        currentLayout.setBackgroundColor(Color.rgb(0,0,0));
 
-        final String[] lunch = {"undefined", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
+        final String[] lunch = {"尚未選擇", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
         db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
         loadtext();
 
@@ -61,10 +68,10 @@ public class Main2Activity extends AppCompatActivity {
 
             do {
                 str ="";
-                str += "id:" + c.getString(0) + ".0\n";
-                str += "name:" + c.getString(1) + "\n";
-                str += "price:" + c.getString(2) + "\n";
-                str += "class:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
+                str += "序號:" + c.getString(0) + ".0\n";
+                str += "分類:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
+                str += "商品名:" + c.getString(1) + "\n";
+                str += "價格:" + c.getString(2) + "\n";
                 mData.add(str);
             } while (c.moveToNext());
 
@@ -131,9 +138,7 @@ public class Main2Activity extends AppCompatActivity {
                 str = c2.getString(0);
             }
 
-            TextView txv = (TextView) findViewById(R.id.txv);
-            txv.setText(str);
-            txv.setMovementMethod(ScrollingMovementMethod.getInstance());
+
 
         }
     }
@@ -226,5 +231,57 @@ public class Main2Activity extends AppCompatActivity {
             mData.remove(position);
             notifyItemRemoved(position);
         }
+    }
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    //ref from:https://stackoverflow.com/questions/6645537/how-to-detect-the-swipe-left-or-right-in-android?fbclid=IwAR2lQ5dvUe3XrpaEcyyJW9HmNfhcagynlLTsB-1OGf1t17aVr3XNIrgdSzU
+    {
+        switch(event.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE)
+                {
+                    if (x2 > x1)
+                    {
+                        //txv.setText("右移");
+                        Random x = new Random();
+                        int red = x.nextInt(256);
+                        int green = x.nextInt(256);
+                        int blue = x.nextInt(256);
+
+                        Intent it = new Intent(this,Main3Activity.class);
+                        it.putExtra("page",1);
+                        startActivityForResult(it,page);
+                    }
+
+                    else
+                    {
+                        //txv.setText("左移");
+                        Random x = new Random();
+                        int red = x.nextInt(256);
+                        int green = x.nextInt(256);
+                        int blue = x.nextInt(256);
+
+                        Intent it = new Intent(this,MainActivity.class);
+                        it.putExtra("page",1);
+                        startActivityForResult(it,page);
+                    }
+
+                }
+                else
+                {
+                    // consider as something else - a screen tap for example
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 }
