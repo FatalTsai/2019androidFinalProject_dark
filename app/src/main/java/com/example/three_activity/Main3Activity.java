@@ -52,7 +52,7 @@ public class Main3Activity extends AppCompatActivity {
 
         db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
 
-        final String[] lunch = {"尚未選擇", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
+        final String[] lunch ={"尚未選擇", "住宅用品", "燃料用品", "食品", "衣著用品"};
         final Integer[] classnumer= new Integer[100];
         final int[] pieColor ={Color.GRAY,Color.parseColor("#00ff00"),Color.parseColor("#bf00ff"),Color.parseColor("#00ffff"),Color.parseColor("#ff8000")};
 
@@ -77,7 +77,7 @@ public class Main3Activity extends AppCompatActivity {
         PieChartData chartData = new PieChartData(slices);
         chartData.setHasLabels(true).setValueLabelTextSize(14);
         chartData.setValueLabelBackgroundColor(Color.argb(255,0,0,0));
-        chartData.setHasCenterCircle(true).setCenterText1("費用占比")
+        chartData.setHasCenterCircle(true).setCenterText1("各項支出占比")
                 .setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#f4e1d9"));
         pieChart.setPieChartData(chartData);
 

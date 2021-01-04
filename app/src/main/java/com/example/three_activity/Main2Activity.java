@@ -56,7 +56,7 @@ public class Main2Activity extends AppCompatActivity {
         currentLayout = findViewById(R.id.back);
         currentLayout.setBackgroundColor(Color.rgb(0,0,0));
 
-        final String[] lunch = {"尚未選擇", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
+        final String[] lunch ={"尚未選擇", "住宅用品", "燃料用品", "食品", "衣著用品"};
         db  = openOrCreateDatabase(db_name, Context.MODE_PRIVATE,null);
         loadtext();
 
@@ -68,10 +68,10 @@ public class Main2Activity extends AppCompatActivity {
 
             do {
                 str ="";
-                str += "序號:" + c.getString(0) + ".0\n";
-                str += "分類:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
-                str += "商品名:" + c.getString(1) + "\n";
-                str += "價格:" + c.getString(2) + "\n";
+                str += "編號:" + c.getString(0) + "\n";
+                str += "商品名稱:" + c.getString(1) + "\n";
+                str += "所屬分類:" + lunch[Integer.valueOf(c.getString(3))] + "\n";
+                str += "價錢:" + c.getString(2) + "\n";
                 mData.add(str);
             } while (c.moveToNext());
 

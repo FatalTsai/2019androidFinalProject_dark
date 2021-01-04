@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Button Totwo;
     TextView text1;
     Spinner spinner;
-    final String[] lunch = {"尚未選擇", "色情片", "避孕用品", "口服避用藥", "性病治療費"};
+    final String[] lunch = {"尚未選擇", "住宅用品", "燃料用品", "食品", "衣著用品"};
 
     static final String db_name ="testDB";
     static  final  String tb_name="test";
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         int red = x.nextInt(256);
                         int green = x.nextInt(256);
                         int blue = x.nextInt(256);
-                        currentLayout.setBackgroundColor(Color.rgb(red,green,blue));
+//                        currentLayout.setBackgroundColor(Color.rgb(red,green,blue));
 
                         Intent it = new Intent(this,Main2Activity.class);
                         it.putExtra("page",1);
